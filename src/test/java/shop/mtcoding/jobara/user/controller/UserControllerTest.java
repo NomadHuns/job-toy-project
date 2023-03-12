@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import shop.mtcoding.jobara.user.dto.UserReq.JoinReqDto;
+import shop.mtcoding.jobara.user.dto.UserReq.LoginReqDto;
 import shop.mtcoding.jobara.user.model.User;
 import shop.mtcoding.jobara.user.service.UserService;
 
@@ -138,6 +139,66 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
         String resp = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println(resp);
+
+        // verify
+        resultActions.andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void login_sussess_test() throws Exception {
+        // given
+        LoginReqDto loginReqDto = new LoginReqDto("ssar", "1234");
+        User user = new User();
+        user.setId(4L);
+        user.setUsername("ssar");
+        user.setPassword("1234");
+        given(userService.login(loginReqDto)).willReturn(user);
+        String reqBody = om.writeValueAsString(loginReqDto);
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/login").content(reqBody)
+                .contentType(MediaType.APPLICATION_JSON_VALUE));
+
+        // verify
+        resultActions.andExpect(status().is2xxSuccessful());
+        resultActions.andExpect(jsonPath("$.stateCode").value(1));
+        resultActions.andExpect(jsonPath("$.code").value(0));
+        resultActions.andExpect(jsonPath("$.msg").value("로그인 성공"));
+    }
+
+    @Test
+    public void login_fail_test_1() throws Exception {
+        // given
+        LoginReqDto loginReqDto = new LoginReqDto("한글", "1234");
+        User user = new User();
+        user.setId(4L);
+        user.setUsername("한글");
+        user.setPassword("1234");
+        given(userService.login(loginReqDto)).willReturn(user);
+        String reqBody = om.writeValueAsString(loginReqDto);
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/login").content(reqBody)
+                .contentType(MediaType.APPLICATION_JSON_VALUE));
+
+        // verify
+        resultActions.andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void login_fail_test_2() throws Exception {
+        // given
+        LoginReqDto loginReqDto = new LoginReqDto("", "1234");
+        User user = new User();
+        user.setId(4L);
+        user.setUsername("");
+        user.setPassword("1234");
+        given(userService.login(loginReqDto)).willReturn(user);
+        String reqBody = om.writeValueAsString(loginReqDto);
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/login").content(reqBody)
+                .contentType(MediaType.APPLICATION_JSON_VALUE));
 
         // verify
         resultActions.andExpect(status().is4xxClientError());

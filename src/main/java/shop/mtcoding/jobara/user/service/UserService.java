@@ -1,11 +1,13 @@
 package shop.mtcoding.jobara.user.service;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.jobara.user.dto.UserReq.JoinReqDto;
+import shop.mtcoding.jobara.user.dto.UserReq.LoginReqDto;
 import shop.mtcoding.jobara.user.model.User;
 import shop.mtcoding.jobara.user.model.UserRepository;
 
@@ -22,5 +24,9 @@ public class UserService {
         user.setEmail(joinReqDto.getEmail());
         user.setRole("user");
         return userRepository.save(user);
+    }
+
+    public User login(@Valid LoginReqDto loginReqDto) {
+        return null;
     }
 }

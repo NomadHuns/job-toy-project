@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.jobara.common.dto.RespDto;
 import shop.mtcoding.jobara.user.dto.UserReq.JoinReqDto;
+import shop.mtcoding.jobara.user.dto.UserReq.LoginReqDto;
 import shop.mtcoding.jobara.user.model.User;
 import shop.mtcoding.jobara.user.service.UserService;
 
@@ -23,5 +24,11 @@ public class UserController {
     public ResponseEntity<?> joinUser(@Valid @RequestBody JoinReqDto joinReqDto) {
         User user = userService.createUser(joinReqDto);
         return new ResponseEntity<>(new RespDto<>(1, 0, "회원 가입 성공", user), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginReqDto loginReqDto) {
+        User user = userService.login(loginReqDto);
+        return new ResponseEntity<>(new RespDto<>(1, 0, "로그인 성공", user), HttpStatus.OK);
     }
 }
