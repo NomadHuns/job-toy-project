@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import shop.mtcoding.jobara.user.dto.UserReq.JoinReqDto;
+import shop.mtcoding.jobara.user.dto.UserReq.LoginReqDto;
 import shop.mtcoding.jobara.user.model.User;
 import shop.mtcoding.jobara.user.model.UserRepository;
 
@@ -41,4 +42,25 @@ public class UserServiceTest {
         // verify
         assertThat(userPS.getUsername()).isEqualTo("ssar");
     }
+
+    @Test
+    public void login_test() {
+        // given
+        LoginReqDto loginReqDto = new LoginReqDto("ssar", "1234");
+        User dummyUser = new User();
+        dummyUser.setUsername("ssar");
+        dummyUser.setPassword("1234");
+        dummyUser.setEmail("ssar@naver.com");
+        dummyUser.setTel("01012341234");
+        dummyUser.setRole("user");
+        when(userRepository.findByUsername(loginReqDto.getUsername())).thenReturn(dummyUser);
+
+        // when
+        User userPS = userService.login(loginReqDto);
+
+        // verify
+        assertThat(userPS.getUsername()).isEqualTo("ssar");
+        assertThat(userPS.getPassword()).isEqualTo("1234");
+    }
+
 }
