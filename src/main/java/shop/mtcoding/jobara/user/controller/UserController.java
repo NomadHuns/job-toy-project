@@ -1,6 +1,8 @@
 package shop.mtcoding.jobara.user.controller;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import javax.websocket.Session;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import shop.mtcoding.jobara.user.service.UserService;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final HttpSession session;
 
     @PostMapping("/join")
     public ResponseEntity<?> joinUser(@Valid @RequestBody JoinReqDto joinReqDto) {
@@ -28,7 +31,8 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginReqDto loginReqDto) {
-        User user = userService.login(loginReqDto);
-        return new ResponseEntity<>(new RespDto<>(1, 0, "로그인 성공", user), HttpStatus.OK);
+        User userPS = userService.login(loginReqDto);
+        session.setAttribute("principal", userPS);
+        return new ResponseEntity<>(new RespDto<>(1, 0, "로그인 성공", userPS), HttpStatus.OK);
     }
 }
