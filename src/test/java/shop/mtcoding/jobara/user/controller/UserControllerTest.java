@@ -15,10 +15,12 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import shop.mtcoding.jobara.common.radis.RedisService;
 import shop.mtcoding.jobara.user.dto.UserReq.JoinReqDto;
 import shop.mtcoding.jobara.user.dto.UserReq.LoginReqDto;
 import shop.mtcoding.jobara.user.model.User;
 import shop.mtcoding.jobara.user.service.UserService;
+import shop.mtcoding.jobara.user.vo.UserVo;
 
 @WebMvcTest(UserController.class)
 public class UserControllerTest {
@@ -30,6 +32,9 @@ public class UserControllerTest {
 
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private RedisService redisService;
 
     @Test
     public void join_sussess_test() throws Exception {
@@ -148,10 +153,9 @@ public class UserControllerTest {
     public void login_sussess_test() throws Exception {
         // given
         LoginReqDto loginReqDto = new LoginReqDto("ssar", "1234");
-        User user = new User();
+        UserVo user = new UserVo();
         user.setId(4L);
         user.setUsername("ssar");
-        user.setPassword("1234");
         given(userService.login(loginReqDto)).willReturn(user);
         String reqBody = om.writeValueAsString(loginReqDto);
 
@@ -170,10 +174,9 @@ public class UserControllerTest {
     public void login_fail_test_1() throws Exception {
         // given
         LoginReqDto loginReqDto = new LoginReqDto("한글", "1234");
-        User user = new User();
+        UserVo user = new UserVo();
         user.setId(4L);
-        user.setUsername("한글");
-        user.setPassword("1234");
+        user.setUsername("ssar");
         given(userService.login(loginReqDto)).willReturn(user);
         String reqBody = om.writeValueAsString(loginReqDto);
 
@@ -189,10 +192,9 @@ public class UserControllerTest {
     public void login_fail_test_2() throws Exception {
         // given
         LoginReqDto loginReqDto = new LoginReqDto("", "1234");
-        User user = new User();
+        UserVo user = new UserVo();
         user.setId(4L);
-        user.setUsername("");
-        user.setPassword("1234");
+        user.setUsername("ssar");
         given(userService.login(loginReqDto)).willReturn(user);
         String reqBody = om.writeValueAsString(loginReqDto);
 

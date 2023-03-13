@@ -14,6 +14,7 @@ import shop.mtcoding.jobara.user.dto.UserReq.JoinReqDto;
 import shop.mtcoding.jobara.user.dto.UserReq.LoginReqDto;
 import shop.mtcoding.jobara.user.model.User;
 import shop.mtcoding.jobara.user.model.UserRepository;
+import shop.mtcoding.jobara.user.vo.UserVo;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -56,11 +57,10 @@ public class UserServiceTest {
         when(userRepository.findByUsername(loginReqDto.getUsername())).thenReturn(dummyUser);
 
         // when
-        User userPS = userService.login(loginReqDto);
+        UserVo userPS = userService.login(loginReqDto);
 
         // verify
         assertThat(userPS.getUsername()).isEqualTo("ssar");
-        assertThat(userPS.getPassword()).isEqualTo("1234");
     }
 
 }

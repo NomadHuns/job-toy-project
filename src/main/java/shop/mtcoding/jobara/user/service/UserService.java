@@ -9,6 +9,7 @@ import shop.mtcoding.jobara.user.dto.UserReq.JoinReqDto;
 import shop.mtcoding.jobara.user.dto.UserReq.LoginReqDto;
 import shop.mtcoding.jobara.user.model.User;
 import shop.mtcoding.jobara.user.model.UserRepository;
+import shop.mtcoding.jobara.user.vo.UserVo;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +27,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User login(LoginReqDto loginReqDto) {
+    public UserVo login(LoginReqDto loginReqDto) {
         User userPS = userRepository.findByUsername(loginReqDto.getUsername());
         if (userPS == null) {
             throw new CustomException("유저네임을 확인해 주세요.");
@@ -34,6 +35,7 @@ public class UserService {
         if (!userPS.getPassword().equals(loginReqDto.getPassword())) {
             throw new CustomException("비밀번호를 확인해 주세요.");
         }
-        return userPS;
+        UserVo user = new UserVo(userPS);
+        return user;
     }
 }
