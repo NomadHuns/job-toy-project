@@ -2,10 +2,10 @@ package shop.mtcoding.jobara.user.controller;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import javax.websocket.Session;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,5 +34,11 @@ public class UserController {
         User userPS = userService.login(loginReqDto);
         session.setAttribute("principal", userPS);
         return new ResponseEntity<>(new RespDto<>(1, 0, "로그인 성공", userPS), HttpStatus.OK);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout() {
+        session.invalidate();
+        return new ResponseEntity<>(new RespDto<>(1, 0, "로그아웃 성공", null), HttpStatus.OK);
     }
 }
